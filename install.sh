@@ -1,12 +1,24 @@
 #!/bin/bash
-wget https://developer.arm.com/-/media/Files/downloads/gnu-a/10.2-2020.11/binrel/gcc-arm-10.2-2020.11-x86_64-arm-none-eabi.tar.xz
-wget https://developer.arm.com/-/media/Files/downloads/gnu-a/10.2-2020.11/binrel/gcc-arm-10.2-2020.11-x86_64-arm-none-linux-gnueabihf.tar.xz
-wget https://developer.arm.com/-/media/Files/downloads/gnu-a/10.2-2020.11/binrel/gcc-arm-10.2-2020.11-x86_64-aarch64-none-elf.tar.xz
-wget https://developer.arm.com/-/media/Files/downloads/gnu-a/10.2-2020.11/binrel/gcc-arm-10.2-2020.11-x86_64-aarch64-none-linux-gnu.tar.xz
-wget https://developer.arm.com/-/media/Files/downloads/gnu-a/10.2-2020.11/binrel/gcc-arm-10.2-2020.11-x86_64-aarch64_be-none-linux-gnu.tar.xz
+ARCH="x86_64"
+VERSION="10.2-2020.11"
+PRE_FIX="https://developer.arm.com/-/media/Files/downloads/gnu-a/${VERSION}/binrel/gcc-arm-${VERSION}-${ARCH}-"
+EXTENSION="tar.xz"
+TOOLCHAIN=(\
+    "arm-none-eabi" \
+    "arm-none-linux-gnueabihf" \
+    "aarch64-none-elf" \
+    "aarch64-none-linux-gnu" \
+    "aarch64_be-none-linux-gnu"
+)
 
-tar Jxvf gcc-arm-10.2-2020.11-x86_64-arm-none-eabi.tar.xz
-tar Jxvf gcc-arm-10.2-2020.11-x86_64-arm-none-linux-gnueabihf.tar.xz
-tar Jxvf gcc-arm-10.2-2020.11-x86_64-aarch64-none-elf.tar.xz
-tar Jxvf gcc-arm-10.2-2020.11-x86_64-aarch64-none-linux-gnu.tar.xz
-tar Jxvf gcc-arm-10.2-2020.11-x86_64-aarch64_be-none-linux-gnu.tar.xz
+for var in ${TOOLCHAIN[@]} 
+do
+    ARGUMENTS+="${PRE_FIX}${var}.${EXTENSION} "
+done
+
+aria2c -Z ${ARGUMENTS}
+
+for var in ${TOOLCHAIN[@]} 
+do
+    tar Jxvf gcc-arm-${VERSION}-${ARCH}-${var}.${EXTENSION}
+done
